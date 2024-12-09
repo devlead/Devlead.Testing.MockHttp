@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon/devlead.testing.mockhttp.png</PackageIcon>
+  </PropertyGroup>
+  <ItemGroup>
+     <PackageReference Include="Verify.Http" />
+  </ItemGroup>
+
+  <ItemGroup>
+     <None Include="../../icon/LICENSE.md" Pack="true" PackagePath="icon" />
+     <None Include="../../icon/devlead.testing.mockhttp.png" Pack="true" PackagePath="icon" />
+     <None Include="../../README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>

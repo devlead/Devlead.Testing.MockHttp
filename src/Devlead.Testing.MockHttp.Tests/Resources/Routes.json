@@ -1,0 +1,45 @@
+[
+  {
+    "Request": {
+      "Methods": [
+        {
+          "Method": "GET"
+        }
+      ],
+      "AbsoluteUri": "https://example.com/login/secret.json"
+    },
+    "Responses": [
+      {
+        "RequestHeaders": {},
+        "ContentResource": "Example.Login.Secret.json",
+        "ContentType": "application/json",
+        "ContentHeaders": {},
+        "StatusCode": 200
+      }
+    ],
+    "Authorization": {
+      "Authorization": [
+        "Bearer AccessToken"
+      ]
+    }
+  },
+  {
+    "Request": {
+      "Methods": [
+        {
+          "Method": "GET"
+        }
+      ],
+      "AbsoluteUri": "https://example.com/index.txt"
+    },
+    "Responses": [
+      {
+        "RequestHeaders": {},
+        "ContentResource": "Example.Index.txt",
+        "ContentType": "text/plain",
+        "ContentHeaders": {},
+        "StatusCode": 200
+      }
+    ]
+  }
+]
