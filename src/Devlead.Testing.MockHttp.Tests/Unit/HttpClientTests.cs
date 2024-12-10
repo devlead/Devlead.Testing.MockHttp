@@ -9,10 +9,7 @@ public class HttpClientTests
     public async Task GetAsync()
     {
         // Given
-        var serviceCollection = new ServiceCollection();
-        serviceCollection.AddMockHttpClient<Constants>();
-        var serviceProvider = serviceCollection.BuildServiceProvider();
-        var httpClient = serviceProvider.GetRequiredService<HttpClient>();
+        var httpClient = ServiceProviderFixture.GetRequiredService<HttpClient>();
 
         // When
         var response = await httpClient.GetAsync("https://example.com/index.txt");
