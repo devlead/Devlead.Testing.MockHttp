@@ -6,14 +6,25 @@
     <Nullable>enable</Nullable>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon/devlead.testing.mockhttp.png</PackageIcon>
+    <IsPackable>true</IsPackable>
+    <PackBuildOutput>false</PackBuildOutput>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <ContentTargetFolders>contentFiles</ContentTargetFolders>
   </PropertyGroup>
   <ItemGroup>
+    <PackageFile Condition="'$(Configuration)'!='Debug'" Include="**/*.cs" Exclude="obj/**;bin/**" PackagePath="$(ContentTargetFolders)\cs\$(TargetFramework)\Devlead\%(RelativeDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+     <PackageReference Include="NuGetizer" PrivateAssets="all" />
      <PackageReference Include="Verify.Http" />
   </ItemGroup>
 
   <ItemGroup>
-     <None Include="../../icon/LICENSE.md" Pack="true" PackagePath="icon" />
-     <None Include="../../icon/devlead.testing.mockhttp.png" Pack="true" PackagePath="icon" />
-     <None Include="../../README.md" Pack="true" PackagePath="\" />
+     <PackageFile Include="../../icon/LICENSE.md" PackagePath="icon/LICENSE.md" />
+     <PackageFile Include="../../icon/devlead.testing.mockhttp.png" PackagePath="icon/devlead.testing.mockhttp.png" />
+     <PackageFile Include="../../README.md" PackagePath="README.md" />
   </ItemGroup>
 </Project>
+

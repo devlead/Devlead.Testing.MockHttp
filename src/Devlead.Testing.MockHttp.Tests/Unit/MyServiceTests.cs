@@ -1,5 +1,4 @@
 using Devlead.Testing.MockHttp.Tests.Services;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Devlead.Testing.MockHttp.Tests.Unit;
 
@@ -9,11 +8,7 @@ public class MyServiceTests
     public async Task GetData()
     {
         // Given
-        var serviceCollection = new ServiceCollection()
-            .AddSingleton<MyService>()
-            .AddMockHttpClient<Constants>();
-        var serviceProvider = serviceCollection.BuildServiceProvider();
-        var myService = serviceProvider.GetRequiredService<MyService>();
+        var myService = ServiceProviderFixture.GetRequiredService<MyService>();
 
         // When
         var result = await myService.GetData();
@@ -26,11 +21,7 @@ public class MyServiceTests
     public async Task GetUnauthorizedSecret()
     {
         // Given
-        var serviceCollection = new ServiceCollection()
-            .AddSingleton<MyService>()
-            .AddMockHttpClient<Constants>();
-        var serviceProvider = serviceCollection.BuildServiceProvider();
-        var myService = serviceProvider.GetRequiredService<MyService>();
+        var myService = ServiceProviderFixture.GetRequiredService<MyService>();
 
         // When 
         var result = Assert.CatchAsync<HttpRequestException>(myService.GetSecret);
@@ -43,16 +34,15 @@ public class MyServiceTests
     public async Task GetSecret()
     {
         // Given
-        var serviceCollection = new ServiceCollection()
-            .AddSingleton<MyService>()
-            .AddMockHttpClient<Constants>(
-                client => client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(
-                    "Bearer",
-                    "AccessToken"
-                    )
-            );
-        var serviceProvider = serviceCollection.BuildServiceProvider();
-        var myService = serviceProvider.GetRequiredService<MyService>();
+
+        var myService = ServiceProviderFixture.GetRequiredService<MyService>(
+                            configure => configure.ConfigureMockHttpClient<Constants>(
+                                            client => client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(
+                                                "Bearer",
+                                                "AccessToken"
+                                                )
+                                        )
+                            );
 
         // When
         var result = await myService.GetSecret();

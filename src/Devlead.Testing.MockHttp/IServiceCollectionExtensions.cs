@@ -6,23 +6,31 @@ namespace Devlead.Testing.MockHttp;
 public static class IServiceCollectionExtensions
 {
     public static IServiceCollection AddMockHttpClient<T>(
-        this IServiceCollection services,
-        Action<HttpClient>? action = null
+        this IServiceCollection services
         )
     {
-        MockHttpClient CreateClient()
+        static MockHttpClient CreateClient(IServiceProvider provider)
         {
             var client = new MockHttpClient(Routes<T>.GetResponseBuilder());
-            action?.Invoke(client);
+            foreach(var service in provider.GetServices<ConfigureHttpClient<T>>())
+            {
+                service?.Invoke(client);
+            }
             return client;
         }
 
         return services
-            .AddSingleton<HttpClient>(
-            _ => CreateClient()
-            )
+            .AddSingleton<HttpClient>(CreateClient)
             .AddSingleton<IHttpClientFactory>(
-             _ => new MockHttpClientFactory(CreateClient)
+             provider => new MockHttpClientFactory(()=>CreateClient(provider))
             );
     }
+
+    public static IServiceCollection ConfigureMockHttpClient<T>(
+        this IServiceCollection services,
+        ConfigureHttpClient<T> configure
+        )
+        => services.AddSingleton(configure);
+
+    public delegate void ConfigureHttpClient<T>(HttpClient client);
 }
