@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Time.Testing;
 
 public static partial class ServiceProviderFixture
 {
@@ -114,6 +115,11 @@ public static partial class ServiceProviderFixture
     public static ServiceProvider GetServiceProvider(Func<IServiceCollection, IServiceCollection>? configure)
     {
         var serviceCollection = new ServiceCollection();
+        
+        serviceCollection
+                .AddSingleton<FakeTimeProvider>()
+                .AddSingleton<TimeProvider>(provider => provider.GetRequiredService<FakeTimeProvider>());
+
         InitServiceProvider(serviceCollection);
         return (configure?.Invoke(serviceCollection) ?? serviceCollection).BuildServiceProvider();
     }

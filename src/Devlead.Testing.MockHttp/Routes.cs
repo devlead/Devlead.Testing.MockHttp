@@ -2,17 +2,29 @@
 using System.Net.Http.Headers;
 using System.Net;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Devlead.Testing.MockHttp;
 
 public class Routes<T>
 {
-    public static Func<HttpRequestMessage, HttpResponseMessage> GetResponseBuilder()
+    public static Func<HttpRequestMessage, HttpResponseMessage> GetResponseBuilder(IServiceProvider provider)
     {
         var routes = GetRoutes();
+        var shouldReplaceResponses = provider
+                                    .GetServices<IServiceCollectionExtensions.ShouldReplaceResponse<T>>()
+                                    .ToArray();
 
         HttpResponseMessage GetResponseBuilder(HttpRequestMessage request)
         {
+            foreach(var shouldReplaceResponse in shouldReplaceResponses)
+            {
+                if (shouldReplaceResponse(provider, out var replacementResponse))
+                {
+                    return replacementResponse;
+                }
+            }
+
             if (
                    request.RequestUri?.AbsoluteUri is { } absoluteUri
                    &&
