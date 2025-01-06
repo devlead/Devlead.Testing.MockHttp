@@ -19,6 +19,7 @@
   <ItemGroup>
      <PackageReference Include="NuGetizer" PrivateAssets="all" />
      <PackageReference Include="Verify.Http" />
+     <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
   </ItemGroup>
 
   <ItemGroup>
