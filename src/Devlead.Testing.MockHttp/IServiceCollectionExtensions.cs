@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using VerifyTests.Http;
 
@@ -20,10 +21,19 @@ public static class IServiceCollectionExtensions
             return client;
         }
 
+        static MockHttpMessageHandlerFactory CreateHttpMessageHandlerFactory(IServiceProvider provider)
+            => new(Routes<T>.GetResponseBuilder(provider));
+
         return services
-            .AddSingleton<HttpClient>(CreateClient)
+            .AddTransient<HttpClient>(provider => provider.GetRequiredService<MockHttpClient>())
+            .AddTransient(CreateClient)
+            .AddSingleton(provider => new MockHttpClientFactory(() => CreateClient(provider)))
             .AddSingleton<IHttpClientFactory>(
-             provider => new MockHttpClientFactory(()=>CreateClient(provider))
+                provider => provider.GetRequiredService<MockHttpClientFactory>()
+            )
+            .AddSingleton(CreateHttpMessageHandlerFactory)
+            .AddSingleton<IHttpMessageHandlerFactory>(
+                provider => provider.GetRequiredService<MockHttpMessageHandlerFactory>()
             );
     }
 
