@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Time.Testing;
 
 public static partial class ServiceProviderFixture
@@ -62,8 +63,6 @@ public static partial class ServiceProviderFixture
             );
     }
 
-
-
     public static (T1, T2, T3, T4) GetRequiredService<T1, T2, T3, T4>(
        Func<IServiceCollection, IServiceCollection>? configure = null
        ) where T1 : notnull
@@ -114,15 +113,32 @@ public static partial class ServiceProviderFixture
 
     public static ServiceProvider GetServiceProvider(Func<IServiceCollection, IServiceCollection>? configure)
     {
+        var inMemoryConfigurationData = new Dictionary<string, string?>();
+        ConfigureInMemory(inMemoryConfigurationData);
+
+
+        var configurationBuilder = new ConfigurationBuilder()
+            .AddInMemoryCollection(inMemoryConfigurationData);
+
+        Configure(configurationBuilder);
+
+        var configuration = configurationBuilder
+                            .Build();
+
         var serviceCollection = new ServiceCollection();
         
         serviceCollection
+                .AddSingleton((IConfiguration)configuration)
                 .AddSingleton<FakeTimeProvider>()
                 .AddSingleton<TimeProvider>(provider => provider.GetRequiredService<FakeTimeProvider>());
 
         InitServiceProvider(serviceCollection);
         return (configure?.Invoke(serviceCollection) ?? serviceCollection).BuildServiceProvider();
     }
+
+    static partial void ConfigureInMemory(IDictionary<string, string?> configData);
+
+    static partial void Configure(IConfigurationBuilder configuration);
 
     static partial void InitServiceProvider(IServiceCollection services);
 }

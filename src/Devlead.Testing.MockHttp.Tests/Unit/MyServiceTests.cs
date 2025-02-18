@@ -50,4 +50,16 @@ public class MyServiceTests
         // Then
         await Verify(result);
     }
+    [Test]
+    public async Task GetServiceName()
+    {
+        // Given
+        var myService = ServiceProviderFixture.GetRequiredService<MyService>();
+
+        // When
+        var result = myService.GetServiceName();
+
+        // Then
+        await Verify(result);
+    }
 }
