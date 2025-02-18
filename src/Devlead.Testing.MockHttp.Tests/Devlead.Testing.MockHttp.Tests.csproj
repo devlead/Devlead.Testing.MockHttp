@@ -37,7 +37,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="../Devlead.Testing.MockHttp/**/*.cs" Exclude="../Devlead.Testing.MockHttp/obj/**;../Devlead.Testing.MockHttp/bin/**" />
+    <Compile Include="../Devlead.Testing.MockHttp/**/*.cs" Exclude="../Devlead.Testing.MockHttp/obj/**;../Devlead.Testing.MockHttp/bin/**">
+      <Link>Devlead/%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </Compile>
   </ItemGroup>
 
 </Project>
