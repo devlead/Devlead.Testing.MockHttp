@@ -19,8 +19,10 @@
   <ItemGroup>
       <PackageReference Include="NuGetizer" PrivateAssets="all" />
       <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
-      <PackageReference Include="Verify.Http" Condition="'$(TargetFramework)' == 'net9.0'" />
-      <PackageReference Include="Verify.Http" VersionOverride="6.4.1" Condition="'$(TargetFramework)' != 'net9.0'" />
+      <PackageReference Include="Verify.Http" Condition="'$(TargetFramework)' == 'net9.0'" Pack="false" />
+      <PackageReference Include="Verify.Http" VersionOverride="6.4.1" Condition="'$(TargetFramework)' != 'net9.0'" Pack="false" />
+      <PackageFile PackFolder="Dependency" Include="Verify.Http" Version="6.5.0" Condition=" '$(TargetFramework)' == 'net9.0' " />
+      <PackageFile PackFolder="Dependency" Include="Verify.Http" Version="6.4.1" Condition=" '$(TargetFramework)' != 'net9.0' " />
   </ItemGroup>
 
   <ItemGroup>
