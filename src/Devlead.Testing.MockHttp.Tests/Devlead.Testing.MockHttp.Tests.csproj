@@ -29,7 +29,7 @@
     <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="Verify.NUnit" />
     <PackageReference Include="System.Text.Json" />
-    <PackageReference Include="Verify.Http" VersionOverride="6.4.1" Condition="'$(TargetFramework)' != 'net9.0'" />
+    <PackageReference Include="Verify.Http" VersionOverride="6.5.0" Condition="'$(TargetFramework)' != 'net9.0'" />
     <PackageReference Include="Verify.Http" Condition="'$(TargetFramework)' == 'net9.0'" />
     <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
   </ItemGroup>
