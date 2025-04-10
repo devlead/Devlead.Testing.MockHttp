@@ -41,5 +41,74 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "Request": {
+      "Methods": [
+        {
+          "Method": "PUT"
+        }
+      ],
+      "AbsoluteUri": "https://example.com/new.txt"
+    },
+    "Responses": [
+      {
+        "StatusCode": 201,
+        "EnableRequests": [
+          {
+            "Method": "GET",
+            "AbsoluteUri": "https://example.com/new.txt"
+          },
+
+          {
+            "Method": "DELETE",
+            "AbsoluteUri": "https://example.com/new.txt"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "Request": {
+      "Methods": [
+        {
+          "Method": "GET"
+        }
+      ],
+      "AbsoluteUri": "https://example.com/new.txt",
+      "Disabled": true
+    },
+    "Responses": [
+      {
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "Request": {
+      "Methods": [
+        {
+          "Method": "DELETE"
+        }
+      ],
+      "AbsoluteUri": "https://example.com/new.txt",
+      "Disabled": true
+    },
+    "Responses": [
+      {
+        "StatusCode": 204,
+        "DisableRequests": [
+          {
+            "Method": "GET",
+            "AbsoluteUri": "https://example.com/new.txt"
+          },
+
+          {
+            "Method": "DELETE",
+            "AbsoluteUri": "https://example.com/new.txt"
+          }
+        ]
+      }
+    ]
   }
 ]

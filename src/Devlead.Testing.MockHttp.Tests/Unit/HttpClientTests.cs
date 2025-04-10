@@ -13,7 +13,7 @@ public class HttpClientTests
         var httpClient = ServiceProviderFixture.GetRequiredService<HttpClient>();
 
         // When
-        var response = await httpClient.GetAsync("https://example.com/index.txt");
+        var response = await httpClient.GetAsync(Constants.Uris.Index_Txt);
 
         // Then
         await Verify(response);
@@ -39,7 +39,7 @@ public class HttpClientTests
             var responses = new List<HttpResponseMessage>();
             for (int i = 0; i < rateLimitOccurrenceCount; i++)
             {
-                responses.Add(await httpClient.GetAsync("https://example.com/index.txt"));
+                responses.Add(await httpClient.GetAsync(Constants.Uris.Index_Txt));
             }
 
             // Then
@@ -67,11 +67,44 @@ public class HttpClientTests
             // When
             for (int i = 0; i <= rateLimitOccurrenceCount * 2; i++, timeProvider.Advance(timeAdvance))
             {
-                responses.Add(await httpClient.GetAsync("https://example.com/index.txt"));
+                responses.Add(await httpClient.GetAsync(Constants.Uris.Index_Txt));
             }
 
             // Then
             await Verify(responses);
+        }
+    }
+
+    public class EnableDisable
+    {
+        [TestCase("GET")]
+        [TestCase("DELETE")]
+        [TestCase("PUT")]
+        [TestCase("PUT", "GET")]
+        [TestCase("PUT", "DELETE")]
+        [TestCase("PUT", "GET", "DELETE")]
+        [TestCase("PUT", "DELETE", "GET")]
+        public async Task Send(params string[] methods)
+        {
+            // Given
+            var httpClient = ServiceProviderFixture.GetRequiredService<HttpClient>();
+
+            // When
+            var result = await methods
+                            .ToAsyncEnumerable()
+                            .SelectAwait(
+                                async method => await httpClient.SendAsync(
+                                                    new HttpRequestMessage(
+                                                        new HttpMethod(method),
+                                                        Constants.Uris.New_Txt
+                                                    )
+                                                )
+                            )
+                            .ToArrayAsync();
+
+
+            // Then
+            await Verify(result);
         }
     }
 }
