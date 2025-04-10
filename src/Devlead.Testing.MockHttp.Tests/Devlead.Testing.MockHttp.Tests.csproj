@@ -27,6 +27,7 @@
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit.Analyzers" />
     <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="System.Linq.Async" />
     <PackageReference Include="Verify.NUnit" />
     <PackageReference Include="System.Text.Json" />
     <PackageReference Include="Verify.Http" VersionOverride="6.4.1" Condition="'$(TargetFramework)' != 'net9.0'" />

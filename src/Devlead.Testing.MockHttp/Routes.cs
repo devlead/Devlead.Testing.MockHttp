@@ -79,11 +79,11 @@ public class Routes<T>
                         HttpMethod Method,
                         string AbsoluteUri
                         ),
-                        Action
+                        Action<bool>
                         >(),
                     (seed, value) =>
                     {
-                        void Enable() => value.Request.Disabled = false;
+                        void Enable(bool enabled) => value.Request.Disabled = !enabled;
                         foreach (var method in value.Request.Methods)
                         {
                             seed[(method, value.Request.AbsoluteUri)] = Enable;
@@ -151,35 +151,51 @@ public class Routes<T>
 
                             if (result is { } response)
                             {
-                                if (response.EnableRequests.Any())
+
+                                var httpResponse = AddHeaders(
+                                    new HttpResponseMessage()
+                                    {
+                                        Content = !string.IsNullOrWhiteSpace(response.ContentResource) && Resources<T>.GetBytes(response.ContentResource) is { } content
+                                                    ? new ByteArrayContent(
+                                                        content
+                                                    )
+                                                    {
+                                                        Headers =
+                                                        {
+                                                            ContentType = MediaTypeHeaderValue.Parse(response.ContentType),
+                                                            ContentMD5 = System.Security.Cryptography.MD5.HashData(content)
+                                                        }
+                                                    }
+                                                    : null,
+                                        StatusCode = response.StatusCode
+                                    },
+                                    response.ContentHeaders
+                                );
+
+
+                                if (response.EnableRequests.Length != 0)
                                 {
                                     foreach (var enableRequest in response.EnableRequests)
                                     {
                                         if (enableRoute.TryGetValue((enableRequest.Method, enableRequest.AbsoluteUri), out var enable))
                                         {
-                                            enable();
+                                            enable(true);
                                         }
                                     }
                                 }
 
-                                return AddHeaders(new HttpResponseMessage()
+                                if (response.DisableRequests.Length != 0)
                                 {
-                                    Content = !string.IsNullOrWhiteSpace(response.ContentResource) && Resources<T>.GetBytes(response.ContentResource) is { } content
-                                                ? new ByteArrayContent(
-                                                    content
-                                                )
-                                                {
-                                                    Headers =
-                                                    {
-                                                        ContentType = MediaTypeHeaderValue.Parse(response.ContentType),
-                                                        ContentMD5 = System.Security.Cryptography.MD5.HashData(content)
-                                                    }
-                                                }
-                                                : null,
-                                    StatusCode = response.StatusCode
-                                },
-                                response.ContentHeaders
-                                );
+                                    foreach (var disableRequest in response.DisableRequests)
+                                    {
+                                        if (enableRoute.TryGetValue((disableRequest.Method, disableRequest.AbsoluteUri), out var enable))
+                                        {
+                                            enable(false);
+                                        }
+                                    }
+                                }
+
+                                return httpResponse;
                             }
 
                             return new HttpResponseMessage
@@ -217,14 +233,16 @@ public class Routes<T>
     }
 
     public record RouteResponse(
-        Dictionary<string, string[]> RequestHeaders,
+        
         string? ContentResource,
         string ContentType,
-        Dictionary<string, string[]> ContentHeaders,
         HttpStatusCode StatusCode
         )
     {
+        public Dictionary<string, string[]> RequestHeaders { get; init; } = [];
+        public Dictionary<string, string[]> ContentHeaders { get; init; } = [];
         public RouteEnableRequest[] EnableRequests { get; init; } = [];
+        public RouteEnableRequest[] DisableRequests { get; init; } = [];
     }
 
     public record RouteEnableRequest(
