@@ -4,7 +4,7 @@
     <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Azure.Identity" Version="1.14.1" />
+    <PackageVersion Include="Azure.Identity" Version="1.14.2" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.7" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="9.0.7" />
