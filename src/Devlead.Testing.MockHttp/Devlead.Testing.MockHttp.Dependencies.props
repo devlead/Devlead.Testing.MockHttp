@@ -17,7 +17,7 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" VersionOverride="8.0.3" Pack="false" />
         <PackageFile PackFolder="Dependency" Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
     
-        <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" VersionOverride="8.10.0" Pack="false" />
+        <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" VersionOverride="9.10.0" Pack="false" />
         <PackageFile PackFolder="Dependency" Include="Microsoft.Extensions.TimeProvider.Testing" Version="8.10.0"  />
       </ItemGroup>
     
