@@ -19,10 +19,14 @@ Setup(
         var buildDate = DateTime.UtcNow;
         var runNumber = gh.IsRunningOnGitHubActions
                             ? gh.Environment.Workflow.RunNumber
-                            : (short)((buildDate - buildDate.Date).TotalSeconds/3);
+                            : 0;
+
+        var suffix = runNumber == 0 
+                       ? $"-{(short)((buildDate - buildDate.Date).TotalSeconds/3)}"
+                       : string.Empty;
 
         var version = FormattableString
-                    .Invariant($"{buildDate:yyyy.M.d}.{runNumber}");
+                          .Invariant($"{buildDate:yyyy.M.d}.{runNumber}{suffix}");
 
         context.Information("Building version {0} (Branch: {1}, IsMain: {2})",
             version,
@@ -143,6 +147,34 @@ Task("Clean")
                 ?   gh.Commands
                     .UploadArtifact(data.ArtifactsPath,  $"Artifact_{gh.Environment.Runner.ImageOS ?? gh.Environment.Runner.OS}_{context.Environment.Runtime.BuiltFramework.Identifier}_{context.Environment.Runtime.BuiltFramework.Version}")
                 : throw new Exception("GitHubActions not available")
+    )
+.Then("Prepare-Integration-Test")
+    .Does<BuildData>(
+        static (context, data) => {
+            context.CopyDirectory(data.ProjectRoot.Combine("Devlead.Testing.MockHttp.Tests"), data.IntegrationTestPath);
+            context.CopyFile(data.ProjectRoot.CombineWithFilePath("Directory.Packages.props"), data.IntegrationTestPath.CombineWithFilePath("Directory.Packages.props"));
+            context.CopyFile("nuget.config", data.IntegrationTestPath.CombineWithFilePath("nuget.config"));
+            context.DotNetAddPackage(
+                "Devlead.Testing.MockHttp",
+                new DotNetPackageAddSettings {
+                    EnvironmentVariables = { { "Configuration", "IntegrationTest" } },
+                    WorkingDirectory = data.IntegrationTestPath,
+                    Version = data.Version,
+                    Source = data.NuGetOutputPath.FullPath
+                }
+            );
+        }
+    )
+.Then("Integration-Test")
+    .Does<BuildData>(
+        static (context, data) => {
+            context.DotNetTest(
+                data.IntegrationTestPath.FullPath,
+                new DotNetTestSettings {
+                   Configuration = "IntegrationTest"
+                }
+            );
+        }
     )
     .Default()
 .Then("Push-GitHub-Packages")
