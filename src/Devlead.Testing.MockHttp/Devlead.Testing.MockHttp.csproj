@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -17,18 +17,14 @@
   </ItemGroup>
 
   <ItemGroup>
-      <PackageReference Include="NuGetizer" PrivateAssets="all" />
-      <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
-      <PackageReference Include="Verify.Http" Condition="'$(TargetFramework)' == 'net9.0'" Pack="false" />
-      <PackageReference Include="Verify.Http" VersionOverride="6.6.0" Condition="'$(TargetFramework)' != 'net9.0'" Pack="false" />
-      <PackageFile PackFolder="Dependency" Include="Verify.Http" Version="7.0.0" Condition=" '$(TargetFramework)' == 'net9.0' " />
-      <PackageFile PackFolder="Dependency" Include="Verify.Http" Version="6.6.0" Condition=" '$(TargetFramework)' != 'net9.0' " />
-  </ItemGroup>
-
-  <ItemGroup>
      <PackageFile Include="../../icon/LICENSE.md" PackagePath="icon/LICENSE.md" />
      <PackageFile Include="../../icon/devlead.testing.mockhttp.png" PackagePath="icon/devlead.testing.mockhttp.png" />
      <PackageFile Include="../../README.md" PackagePath="README.md" />
   </ItemGroup>
-</Project>
 
+  <ItemGroup>
+      <PackageReference Include="NuGetizer" PrivateAssets="all" />
+  </ItemGroup>
+
+  <Import Project="Devlead.Testing.MockHttp.Dependencies.props" />
+</Project>
