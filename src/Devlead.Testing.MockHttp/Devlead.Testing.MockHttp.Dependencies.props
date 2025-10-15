@@ -8,7 +8,7 @@
         <PackageReference Include="Verify.Http" VersionOverride="6.4.1" Pack="false" />
         <PackageFile PackFolder="Dependency" Include="Verify.Http" Version="6.4.1" />
     
-        <PackageReference Include="Microsoft.Extensions.Http" VersionOverride="8.0.1" Pack="false" />
+        <PackageReference Include="Microsoft.Extensions.Http" VersionOverride="9.0.10" Pack="false" />
         <PackageFile PackFolder="Dependency" Include="Microsoft.Extensions.Http" Version="8.0.1" />
     
         <PackageReference Include="Microsoft.Net.Http.Headers" VersionOverride="8.0.21" Pack="false" />
