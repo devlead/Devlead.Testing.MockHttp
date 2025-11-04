@@ -5,7 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Argon.Xml" Version="0.32.0" />
-    <PackageVersion Include="Verify" Version="31.0.4" />
+    <PackageVersion Include="Verify" Version="31.4.2" />
     <PackageVersion Include="Azure.Identity" Version="1.17.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
     <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="9.10.0" />
