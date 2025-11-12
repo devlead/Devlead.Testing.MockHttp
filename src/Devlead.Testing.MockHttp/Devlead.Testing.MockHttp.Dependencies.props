@@ -14,7 +14,7 @@
         <PackageReference Include="Microsoft.Net.Http.Headers" VersionOverride="8.0.21" Pack="false" />
         <PackageFile PackFolder="Dependency" Include="Microsoft.Net.Http.Headers" Version="8.0.21" />
     
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" VersionOverride="8.0.3" Pack="false" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" VersionOverride="10.0.0" Pack="false" />
         <PackageFile PackFolder="Dependency" Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
     
         <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" VersionOverride="8.10.0" Pack="false" />
