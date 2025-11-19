@@ -28,7 +28,7 @@
         <PackageReference Include="Microsoft.Extensions.Http" VersionOverride="9.0.10" Pack="false" />
         <PackageFile PackFolder="Dependency" Include="Microsoft.Extensions.Http" Version="9.0.10" />
     
-        <PackageReference Include="Microsoft.Net.Http.Headers" VersionOverride="9.0.10" Pack="false" />
+        <PackageReference Include="Microsoft.Net.Http.Headers" VersionOverride="9.0.11" Pack="false" />
         <PackageFile PackFolder="Dependency" Include="Microsoft.Net.Http.Headers" Version="9.0.10" />
     
         <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" VersionOverride="9.10.0" Pack="false" />
