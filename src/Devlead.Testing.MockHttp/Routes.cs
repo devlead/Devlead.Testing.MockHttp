@@ -49,12 +49,7 @@ public class Routes<T>
         return GetResponseBuilder;
     }
 
-    private static ImmutableDictionary<(
-                        HttpMethod Method,
-                        string AbsoluteUri
-                        ),
-                        Func<HttpRequestMessage, HttpResponseMessage>
-                        >? _routes;
+    private static ImmutableArray<Route>? _routes;
 
     private static ImmutableDictionary<(
                         HttpMethod Method,
@@ -62,7 +57,7 @@ public class Routes<T>
                         ),
                         Func<HttpRequestMessage, HttpResponseMessage>
                         > GetRoutes()
-     => _routes ??= InitializeRoutesFromResource();
+     => InitializeRoutesFromResource();
 
 
     private static ImmutableDictionary<(HttpMethod Method, string PathAndQuery), Func<HttpRequestMessage, HttpResponseMessage>> InitializeRoutesFromResource()
@@ -70,8 +65,7 @@ public class Routes<T>
         var routesJson = Resources<T>.GetString("Routes.json");
         ArgumentException.ThrowIfNullOrEmpty(routesJson);
 
-        var routes = System.Text.Json.JsonSerializer.Deserialize<Route[]>(routesJson);
-        ArgumentNullException.ThrowIfNull(routes);
+        var routes = _routes ??= ImmutableArray.Create(System.Text.Json.JsonSerializer.Deserialize<Route[]>(routesJson) ?? throw new ArgumentNullException(nameof(routesJson)));
 
         var enableRoute = routes
                 .Aggregate(
