@@ -60,12 +60,25 @@ public class Routes<T>
      => InitializeRoutesFromResource();
 
 
+    private static readonly
+#if NET9_0_OR_GREATER
+        Lock 
+#else
+        object
+#endif
+        _lock = new ();
+
     private static ImmutableDictionary<(HttpMethod Method, string PathAndQuery), Func<HttpRequestMessage, HttpResponseMessage>> InitializeRoutesFromResource()
     {
-        var routesJson = Resources<T>.GetString("Routes.json");
-        ArgumentException.ThrowIfNullOrEmpty(routesJson);
+        static ImmutableArray<Route> GetRoutes()
+        {
+            lock (_lock)
+            {
+                return _routes ??= ImmutableArray.Create(System.Text.Json.JsonSerializer.Deserialize<Route[]>(Resources<T>.GetString("Routes.json") ?? throw new ArgumentNullException("routesJson")) ?? throw new ArgumentNullException("routes"));
+            }
+        }
+        var routes = GetRoutes();
 
-        var routes = _routes ??= ImmutableArray.Create(System.Text.Json.JsonSerializer.Deserialize<Route[]>(routesJson) ?? throw new ArgumentNullException(nameof(routesJson)));
 
         var enableRoute = routes
                 .Aggregate(
