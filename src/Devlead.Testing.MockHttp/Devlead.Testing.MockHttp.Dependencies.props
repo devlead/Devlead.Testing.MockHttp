@@ -11,8 +11,8 @@
         <PackageReference Include="Microsoft.Extensions.Http" VersionOverride="8.0.1" Pack="false" />
         <PackageFile PackFolder="Dependency" Include="Microsoft.Extensions.Http" Version="8.0.1" />
     
-        <PackageReference Include="Microsoft.Net.Http.Headers" VersionOverride="8.0.21" Pack="false" />
-        <PackageFile PackFolder="Dependency" Include="Microsoft.Net.Http.Headers" Version="8.0.21" />
+        <PackageReference Include="Microsoft.Net.Http.Headers" VersionOverride="8.0.22" Pack="false" />
+        <PackageFile PackFolder="Dependency" Include="Microsoft.Net.Http.Headers" Version="8.0.22" />
     
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" VersionOverride="8.0.3" Pack="false" />
         <PackageFile PackFolder="Dependency" Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
@@ -22,30 +22,30 @@
       </ItemGroup>
     
       <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
-        <PackageReference Include="Verify.Http" VersionOverride="7.0.0" Pack="false" />
-        <PackageFile PackFolder="Dependency" Include="Verify.Http" Version="7.0.0" />
+        <PackageReference Include="Verify.Http" VersionOverride="7.4.0" Pack="false" />
+        <PackageFile PackFolder="Dependency" Include="Verify.Http" Version="7.4.0" />
     
-        <PackageReference Include="Microsoft.Extensions.Http" VersionOverride="9.0.10" Pack="false" />
-        <PackageFile PackFolder="Dependency" Include="Microsoft.Extensions.Http" Version="9.0.10" />
+        <PackageReference Include="Microsoft.Extensions.Http" VersionOverride="9.0.11" Pack="false" />
+        <PackageFile PackFolder="Dependency" Include="Microsoft.Extensions.Http" Version="9.0.11" />
     
         <PackageReference Include="Microsoft.Net.Http.Headers" VersionOverride="9.0.11" Pack="false" />
-        <PackageFile PackFolder="Dependency" Include="Microsoft.Net.Http.Headers" Version="9.0.10" />
+        <PackageFile PackFolder="Dependency" Include="Microsoft.Net.Http.Headers" Version="9.0.11" />
     
         <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" VersionOverride="9.10.0" Pack="false" />
         <PackageFile PackFolder="Dependency" Include="Microsoft.Extensions.TimeProvider.Testing" Version="9.10.0" />
       </ItemGroup>
     
       <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
-        <PackageReference Include="Verify.Http" VersionOverride="7.0.0" Pack="false" />
-        <PackageFile PackFolder="Dependency" Include="Verify.Http" Version="7.0.0" />
+        <PackageReference Include="Verify.Http" VersionOverride="7.5.0" Pack="false" />
+        <PackageFile PackFolder="Dependency" Include="Verify.Http" Version="7.5.0" />
     
-        <PackageReference Include="Microsoft.Extensions.Http" VersionOverride="10.0.0-rc.2.25502.107" Pack="false" />
-        <PackageFile PackFolder="Dependency" Include="Microsoft.Extensions.Http" Version="10.0.0-rc.2.25502.107" />
+        <PackageReference Include="Microsoft.Extensions.Http" VersionOverride="10.0.0" Pack="false" />
+        <PackageFile PackFolder="Dependency" Include="Microsoft.Extensions.Http" Version="10.0.0" />
     
-        <PackageReference Include="Microsoft.Net.Http.Headers" VersionOverride="10.0.0-rc.2.25502.107" Pack="false" />
-        <PackageFile PackFolder="Dependency" Include="Microsoft.Net.Http.Headers" Version="10.0.0-rc.2.25502.107" />
+        <PackageReference Include="Microsoft.Net.Http.Headers" VersionOverride="10.0.0" Pack="false" />
+        <PackageFile PackFolder="Dependency" Include="Microsoft.Net.Http.Headers" Version="10.0.0" />
     
-        <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" VersionOverride="9.10.0" Pack="false" />
-        <PackageFile PackFolder="Dependency" Include="Microsoft.Extensions.TimeProvider.Testing" Version="9.10.0" />
+        <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" VersionOverride="10.0.0" Pack="false" />
+        <PackageFile PackFolder="Dependency" Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.0.0" />
       </ItemGroup>    
 </Project>
