@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Net;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Concurrent;
 
 namespace Devlead.Testing.MockHttp;
 
@@ -77,40 +78,41 @@ public class Routes<T>
                 return _routes ??= ImmutableArray.Create(System.Text.Json.JsonSerializer.Deserialize<Route[]>(Resources<T>.GetString("Routes.json") ?? throw new ArgumentNullException("routesJson")) ?? throw new ArgumentNullException("routes"));
             }
         }
+
         var routes = GetRoutes();
-
-
-        var enableRoute = routes
-                .Aggregate(
-                    new Dictionary<(
-                        HttpMethod Method,
-                        string AbsoluteUri
-                        ),
-                        Action<bool>
-                        >(),
-                    (seed, value) =>
-                    {
-                        void Enable(bool enabled) => value.Request.Disabled = !enabled;
-                        foreach (var method in value.Request.Methods)
-                        {
-                            seed[(method, value.Request.AbsoluteUri)] = Enable;
-                        }
-
-                        return seed;
-                    },
-                    seed => seed.ToImmutableDictionary()
-                    );
 
         var result =
             routes
             .Aggregate(
-                new Dictionary<(
-                    HttpMethod Method,
-                    string AbsoluteUri
-                    ),
-                    Func<HttpRequestMessage, HttpResponseMessage>
-                    >(),
-                (seed, value) =>
+                (
+                     EnableRoute: routes
+                                    .Aggregate(
+                                        new ConcurrentDictionary<(
+                                            HttpMethod Method,
+                                            string AbsoluteUri
+                                            ),
+                                            Action<bool>
+                                            >(),
+                                        static (seed, value) =>
+                                        {
+                                            void Enable(bool enabled) => value.Request.Disabled = !enabled;
+                                            foreach (var method in value.Request.Methods)
+                                            {
+                                                seed.TryAdd((method, value.Request.AbsoluteUri), Enable);
+                                            }
+
+                                            return seed;
+                                        },
+                                        seed => seed.ToImmutableDictionary()
+                                        ),
+                    Routes: new ConcurrentDictionary<(
+                                    HttpMethod Method,
+                                    string AbsoluteUri
+                                    ),
+                                    Func<HttpRequestMessage, HttpResponseMessage>
+                                    >()
+                ),
+                static (seed, value) =>
                 {
                     static HttpResponseMessage AddHeaders(HttpResponseMessage response, Dictionary<string, string[]> headers)
                     {
@@ -184,7 +186,7 @@ public class Routes<T>
                                 {
                                     foreach (var enableRequest in response.EnableRequests)
                                     {
-                                        if (enableRoute.TryGetValue((enableRequest.Method, enableRequest.AbsoluteUri), out var enable))
+                                        if (seed.EnableRoute.TryGetValue((enableRequest.Method, enableRequest.AbsoluteUri), out var enable))
                                         {
                                             enable(true);
                                         }
@@ -195,7 +197,7 @@ public class Routes<T>
                                 {
                                     foreach (var disableRequest in response.DisableRequests)
                                     {
-                                        if (enableRoute.TryGetValue((disableRequest.Method, disableRequest.AbsoluteUri), out var enable))
+                                        if (seed.EnableRoute.TryGetValue((disableRequest.Method, disableRequest.AbsoluteUri), out var enable))
                                         {
                                             enable(false);
                                         }
@@ -214,12 +216,12 @@ public class Routes<T>
 
                     foreach (var method in value.Request.Methods)
                     {
-                        seed[(method, value.Request.AbsoluteUri)] = responseFunc;
+                        seed.Routes.TryAdd((method, value.Request.AbsoluteUri), responseFunc);
                     }
 
                     return seed;
                 },
-                seed => seed.ToImmutableDictionary()
+                static seed => seed.Routes.ToImmutableDictionary()
                 );
 
         return result;
