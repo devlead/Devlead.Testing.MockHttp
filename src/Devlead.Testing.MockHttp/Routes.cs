@@ -50,8 +50,6 @@ public class Routes<T>
         return GetResponseBuilder;
     }
 
-    private static ImmutableArray<Route>? _routes;
-
     private static ImmutableDictionary<(
                         HttpMethod Method,
                         string AbsoluteUri
@@ -75,7 +73,7 @@ public class Routes<T>
         {
             lock (_lock)
             {
-                return _routes ??= ImmutableArray.Create(System.Text.Json.JsonSerializer.Deserialize<Route[]>(Resources<T>.GetString("Routes.json") ?? throw new ArgumentNullException("routesJson")) ?? throw new ArgumentNullException("routes"));
+                return ImmutableArray.Create(System.Text.Json.JsonSerializer.Deserialize<Route[]>(Resources<T>.GetString("Routes.json") ?? throw new ArgumentNullException("routesJson")) ?? throw new ArgumentNullException("routes"));
             }
         }
 
