@@ -11,9 +11,11 @@ public static class IServiceCollectionExtensions
         this IServiceCollection services
         )
     {
+        services.AddSingleton(Routes<T>.GetResponseBuilder);
+
         static MockHttpClient CreateClient(IServiceProvider provider)
         {
-            var client = new MockHttpClient(Routes<T>.GetResponseBuilder(provider));
+            var client = new MockHttpClient(provider.GetRequiredService<Func<HttpRequestMessage, HttpResponseMessage>>());
             foreach(var service in provider.GetServices<ConfigureHttpClient<T>>())
             {
                 service?.Invoke(client);
@@ -22,7 +24,7 @@ public static class IServiceCollectionExtensions
         }
 
         static MockHttpMessageHandlerFactory CreateHttpMessageHandlerFactory(IServiceProvider provider)
-            => new(Routes<T>.GetResponseBuilder(provider));
+            => new(provider.GetRequiredService<Func<HttpRequestMessage, HttpResponseMessage>>());
 
         return services
             .AddTransient<HttpClient>(provider => provider.GetRequiredService<MockHttpClient>())
