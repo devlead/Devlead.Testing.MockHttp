@@ -92,13 +92,8 @@ public class HttpClientTests
             // When
             var result = await methods
                             .ToAsyncEnumerable()
-#if NET10_0_OR_GREATER
                             .Select(
                                 async (method, _, _)
-#else
-                            .SelectAwait(
-                                async method 
-#endif
                                     => await httpClient.SendAsync(
                                                     new HttpRequestMessage(
                                                         new HttpMethod(method),
