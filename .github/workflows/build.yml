@@ -38,6 +38,12 @@ jobs:
         with:
           global-json-file: global.json
 
+      - name: NuGet Login
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
       - name: Run Cake script
         uses: cake-build/cake-action@v3
         env:
@@ -45,7 +51,7 @@ jobs:
           NuGetReportSettings_WorkspaceId: ${{ secrets.NUGETREPORTSETTINGS_WORKSPACEID }}
           GH_PACKAGES_NUGET_SOURCE: ${{ secrets.GH_PACKAGES_NUGET_SOURCE }}
           NUGET_SOURCE: ${{ secrets.NUGET_SOURCE }}
-          NUGET_APIKEY: ${{ secrets.NUGET_APIKEY }}
+          NUGET_APIKEY: ${{ steps.login.outputs.NUGET_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
@@ -54,5 +60,5 @@ jobs:
           AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
           AZURE_STORAGE_ACCOUNT_CONTAINER: ${{ secrets.AZURE_STORAGE_ACCOUNT_CONTAINER }}${{ matrix.os }}
         with:
-          cake-version: tool-manifest
+          file-path: cake.cs
           target: GitHub-Actions
