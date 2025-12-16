@@ -8,9 +8,9 @@
     <PackageVersion Include="Verify" Version="31.8.0" />
     <PackageVersion Include="Azure.Identity" Version="1.17.1" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
-    <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.0.0" />
-    <PackageVersion Include="Microsoft.Net.Http.Headers" Version="10.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Http " Version="10.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.1.0" />
+    <PackageVersion Include="Microsoft.Net.Http.Headers" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Http " Version="10.0.1" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageVersion Include="MimeTypes" Version="2.5.2" />
     <PackageVersion Include="NuGetizer" Version="1.4.6" />
