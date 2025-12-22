@@ -16,7 +16,7 @@
     <PackageVersion Include="NuGetizer" Version="1.4.6" />
     <PackageVersion Include="NUnit" Version="4.4.0" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.11.2" />
-    <PackageVersion Include="NUnit3TestAdapter" Version="6.0.0" />
+    <PackageVersion Include="NUnit3TestAdapter" Version="6.0.1" />
     <PackageVersion Include="System.Linq.Async" Version="7.0.0" />
     <PackageVersion Include="Verify.NUnit" Version="31.9.0" />
     <PackageVersion Include="Verify.Http" Version="7.5.1" />
