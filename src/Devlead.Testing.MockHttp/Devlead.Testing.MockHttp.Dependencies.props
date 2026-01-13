@@ -17,7 +17,7 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" VersionOverride="8.0.3" Pack="false" />
         <PackageFile PackFolder="Dependency" Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
     
-        <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" VersionOverride="8.10.0" Pack="false" />
+        <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" VersionOverride="10.2.0" Pack="false" />
         <PackageFile PackFolder="Dependency" Include="Microsoft.Extensions.TimeProvider.Testing" Version="8.10.0"  />
       </ItemGroup>
     
@@ -31,7 +31,7 @@
         <PackageReference Include="Microsoft.Net.Http.Headers" VersionOverride="9.0.11" Pack="false" />
         <PackageFile PackFolder="Dependency" Include="Microsoft.Net.Http.Headers" Version="9.0.11" />
     
-        <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" VersionOverride="9.10.0" Pack="false" />
+        <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" VersionOverride="10.2.0" Pack="false" />
         <PackageFile PackFolder="Dependency" Include="Microsoft.Extensions.TimeProvider.Testing" Version="9.10.0" />
       </ItemGroup>
     
@@ -45,7 +45,7 @@
         <PackageReference Include="Microsoft.Net.Http.Headers" VersionOverride="10.0.1" Pack="false" />
         <PackageFile PackFolder="Dependency" Include="Microsoft.Net.Http.Headers" Version="10.0.1" />
     
-        <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" VersionOverride="10.1.0" Pack="false" />
+        <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" VersionOverride="10.2.0" Pack="false" />
         <PackageFile PackFolder="Dependency" Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.1.0" />
       </ItemGroup>    
 </Project>
