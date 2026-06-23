@@ -1,3 +1,4 @@
+#!/usr/bin/env dotnet
 #:sdk Cake.Sdk@6.2.0
 #:property IncludeAdditionalFiles=./build/*.cs
 
@@ -133,6 +134,7 @@ Task("Clean")
                 NoBuild = true,
                 NoRestore = true,
                 OutputDirectory = data.NuGetOutputPath,
+                ArgumentCustomization = args => args.Append("/m:1"),
                 MSBuildSettings = data.MSBuildSettings
             }
         )
@@ -149,6 +151,7 @@ Task("Clean")
         static (context, data) => {
             context.CopyDirectory(data.ProjectRoot.Combine("Devlead.Testing.MockHttp.Tests"), data.IntegrationTestPath);
             context.CopyFile(data.ProjectRoot.CombineWithFilePath("Directory.Packages.props"), data.IntegrationTestPath.CombineWithFilePath("Directory.Packages.props"));
+            context.CopyFile(data.ProjectRoot.CombineWithFilePath("Devlead.Testing.MockHttp.slnx"), data.IntegrationTestPath.CombineWithFilePath("Devlead.Testing.MockHttp.slnx"));
             context.CopyFile("nuget.config", data.IntegrationTestPath.CombineWithFilePath("nuget.config"));
             context.DotNetAddPackage(
                 "Devlead.Testing.MockHttp",
@@ -165,7 +168,7 @@ Task("Clean")
     .Does<BuildData>(
         static (context, data) => {
             context.DotNetTest(
-                data.IntegrationTestPath.FullPath,
+                data.IntegrationTestPath.CombineWithFilePath("Devlead.Testing.MockHttp.Tests.csproj").FullPath,
                 new DotNetTestSettings {
                    Configuration = "IntegrationTest"
                 }

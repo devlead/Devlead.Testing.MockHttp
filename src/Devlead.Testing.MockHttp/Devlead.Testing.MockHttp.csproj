@@ -7,24 +7,20 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon/devlead.testing.mockhttp.png</PackageIcon>
     <IsPackable>true</IsPackable>
-    <PackBuildOutput>false</PackBuildOutput>
-    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <ContentTargetFolders>contentFiles</ContentTargetFolders>
+    <SourcePackRoot>Devlead</SourcePackRoot>
+    <SourcePackIncludeGeneratedUsings>false</SourcePackIncludeGeneratedUsings>
   </PropertyGroup>
+
   <ItemGroup>
-    <PackageFile Condition="'$(Configuration)'!='Debug'" Include="**/*.cs" Exclude="obj/**;bin/**" PackagePath="$(ContentTargetFolders)\cs\$(TargetFramework)\Devlead\%(RelativeDir)%(Filename)%(Extension)" />
+    <PackageReference Include="Devlead.SourcePack" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
-     <PackageFile Include="../../icon/LICENSE.md" PackagePath="icon/LICENSE.md" />
-     <PackageFile Include="../../icon/devlead.testing.mockhttp.png" PackagePath="icon/devlead.testing.mockhttp.png" />
-     <PackageFile Include="../../README.md" PackagePath="README.md" />
-  </ItemGroup>
-
-  <ItemGroup>
-      <PackageReference Include="NuGetizer" PrivateAssets="all" />
+    <SourcePackFile Include="../../icon/LICENSE.md" Kind="Metadata" PackagePath="icon/LICENSE.md" />
+    <SourcePackFile Include="../../icon/devlead.testing.mockhttp.png" Kind="Metadata" PackagePath="icon/devlead.testing.mockhttp.png" />
+    <SourcePackFile Include="../../README.md" Kind="Metadata" />
   </ItemGroup>
 
   <Import Project="Devlead.Testing.MockHttp.Dependencies.props" />
+
 </Project>
