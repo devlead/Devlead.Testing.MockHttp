@@ -5,7 +5,7 @@
     <CentralPackageVersionOverrideEnabled>true</CentralPackageVersionOverrideEnabled>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Argon.Xml" Version="0.35.1" />
+    <PackageVersion Include="Argon.Xml" Version="0.35.2" />
     <PackageVersion Include="Devlead.SourcePack" Version="2026.7.14.33" />
     <PackageVersion Include="Verify" Version="31.24.2" />
     <PackageVersion Include="coverlet.collector" Version="10.0.1" />
