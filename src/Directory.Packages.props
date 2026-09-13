@@ -3,6 +3,8 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
     <CentralPackageVersionOverrideEnabled>true</CentralPackageVersionOverrideEnabled>
+    <Verify_SponsorshipExemption>OpenSource</Verify_SponsorshipExemption>
+    <Verify_SponsorshipExemptionUntil>$([System.DateTime]::UtcNow.AddMonths(6).ToString('yyyy-MM'))</Verify_SponsorshipExemptionUntil>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Argon.Xml" Version="0.37.0" />
