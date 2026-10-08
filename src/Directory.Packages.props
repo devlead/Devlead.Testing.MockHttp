@@ -7,7 +7,7 @@
     <Verify_SponsorshipExemptionUntil>$([System.DateTime]::UtcNow.AddMonths(6).ToString('yyyy-MM'))</Verify_SponsorshipExemptionUntil>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Argon.Xml" Version="0.38.0" />
+    <PackageVersion Include="Argon.Xml" Version="0.38.2" />
     <PackageVersion Include="Devlead.SourcePack" Version="2026.9.11.79" />
     <PackageVersion Include="Verify" Version="33.3.2" />
     <PackageVersion Include="coverlet.collector" Version="10.1.0" />
