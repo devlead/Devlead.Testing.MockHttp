@@ -22,4 +22,10 @@
     <PackageReference Include="Microsoft.Net.Http.Headers" />
     <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
   </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net11.0'">
+    <PackageReference Include="Verify.Http" />
+    <PackageReference Include="Microsoft.Extensions.Http" VersionOverride="11.0.0-rc.1.26425.128" />
+    <PackageReference Include="Microsoft.Net.Http.Headers" VersionOverride="11.0.0-rc.1.26425.128" />
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
+  </ItemGroup>
 </Project>
