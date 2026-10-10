@@ -8,7 +8,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Argon.Xml" Version="0.38.2" />
-    <PackageVersion Include="Devlead.SourcePack" Version="2026.9.11.79" />
+    <PackageVersion Include="Devlead.SourcePack" Version="2026.10.10.96" />
     <PackageVersion Include="Verify" Version="33.3.3" />
     <PackageVersion Include="coverlet.collector" Version="10.1.0" />
     <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.10.0" />
