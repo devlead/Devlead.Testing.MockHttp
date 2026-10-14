@@ -20,6 +20,12 @@ internal static partial class MockHttpWebHost
             ? informational.Split('+', 2)[0]
             : typeof(MockHttpWebHost).Assembly.GetName().Version?.ToString() ?? string.Empty;
 
+    private static readonly byte[] FaviconPng = LoadEmbedded(
+        "Devlead.Testing.MockHttp.Tool.Inspect.favicon.png",
+        "The favicon resource is missing.");
+
+    private static IResult Favicon() => Results.File(FaviconPng, "image/png");
+
     private static IResult InspectPage()
     {
         using var stream = typeof(MockHttpWebHost).Assembly
@@ -27,6 +33,15 @@ internal static partial class MockHttpWebHost
             ?? throw new InvalidOperationException("The inspect page resource is missing.");
         using var reader = new StreamReader(stream, Encoding.UTF8);
         return Results.Content(reader.ReadToEnd(), "text/html", Encoding.UTF8);
+    }
+
+    private static byte[] LoadEmbedded(string name, string missing)
+    {
+        using var stream = typeof(MockHttpWebHost).Assembly.GetManifestResourceStream(name)
+            ?? throw new InvalidOperationException(missing);
+        using var memory = new MemoryStream();
+        stream.CopyTo(memory);
+        return memory.ToArray();
     }
 
     private static IResult InspectState(RouteTable table, MockHttpListenUrl listen) =>

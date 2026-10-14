@@ -71,6 +71,7 @@
           localhost
         ]
       },
+      requestContentLength: 0,
       responseHeaders: {
         Content-Type: [
           text/plain
@@ -81,7 +82,24 @@
       },
       contentType: text/plain,
       contentLength: 13,
-      bodyPreview: Hello, World!
+      bodyPreview: Hello, World!,
+      route: {
+        Request: {
+          Methods: [
+            {
+              Method: GET
+            }
+          ],
+          AbsoluteUri: https://example.com/index.txt
+        },
+        Responses: [
+          {
+            ContentResource: Example.Index.txt,
+            ContentType: text/plain,
+            StatusCode: 200
+          }
+        ]
+      }
     }
   ]
 }
