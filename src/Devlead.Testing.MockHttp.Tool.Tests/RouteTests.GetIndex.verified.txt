@@ -1,0 +1,22 @@
+﻿{
+  Version: 1.1,
+  Content: {
+    Headers: [
+      {
+        Content-Type: [
+          text/plain
+        ]
+      },
+      {
+        Content-MD5: [
+          ZajifYh5KDgxtmS9i38K1A==
+        ]
+      }
+    ]
+  },
+  StatusCode: OK,
+  ReasonPhrase: OK,
+  Headers: [],
+  TrailingHeaders: [],
+  IsSuccessStatusCode: true
+}

@@ -7,6 +7,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon/devlead.testing.mockhttp.png</PackageIcon>
     <IsPackable>true</IsPackable>
+    <PackageDescription>.NET Library for mocking HTTP client requests</PackageDescription>
     <SourcePackRoot>Devlead</SourcePackRoot>
     <SourcePackIncludeGeneratedUsings>false</SourcePackIncludeGeneratedUsings>
   </PropertyGroup>

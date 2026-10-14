@@ -165,6 +165,17 @@ public class MyServiceTests
 This approach ensures that your service logic is tested in isolation, without making actual network requests, by simulating HTTP interactions using the mock HTTP client. The `Constants` type helps manage the configuration of these interactions, providing a centralized way to define and access resource settings.
 
 
+## Local mock HTTP tool
+
+`Devlead.Testing.MockHttp.Tool` is a .NET global tool that hosts the same `Routes.json` contract on Kestrel instead of replacing `HttpClient`. Install and serve a resources directory:
+
+```bash
+dotnet tool install -g Devlead.Testing.MockHttp.Tool
+dotnet mockhttp serve ./Resources --port 5080
+```
+
+By default the tool matches method, path, and query so a client can use `http://127.0.0.1:5080` as its base address. Pass `--match-host` to also require the request `Host` to match the host in `AbsoluteUri`. The console shows live route and activity tables; `http://127.0.0.1:5080/inspect` has request/response header details. See the [tool README](src/Devlead.Testing.MockHttp.Tool/README.md) for details.
+
 ## Example project
 
 A real world example can be found in the [Blobify](https://github.com/devlead/Blobify) project.
