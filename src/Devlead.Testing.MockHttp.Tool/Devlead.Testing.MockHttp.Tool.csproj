@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net11.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>dotnet-mockhttp</ToolCommandName>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon/devlead.testing.mockhttp.png</PackageIcon>
+    <IsPackable>true</IsPackable>
+    <IsTestProject>false</IsTestProject>
+    <IsTestingPlatformApplication>false</IsTestingPlatformApplication>
+    <PackageDescription>.NET global tool that hosts Routes.json as a local mock HTTP API</PackageDescription>
+    <RootNamespace>Devlead.Testing.MockHttp.Tool</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <Using Include="Devlead.Testing.MockHttp.Tool.Hosting" />
+    <Using Include="Devlead.Testing.MockHttp.Tool.Inspect" />
+    <Using Include="Devlead.Testing.MockHttp.Tool.Inspect.Models" />
+    <Using Include="Devlead.Testing.MockHttp.Tool.Routing" />
+    <Using Include="Devlead.Testing.MockHttp.Tool.Routing.Models" />
+    <Using Include="Devlead.Testing.MockHttp.Tool.Ui" />
+    <Using Include="Microsoft.AspNetCore.Builder" />
+    <Using Include="Microsoft.AspNetCore.Hosting" />
+    <Using Include="Microsoft.AspNetCore.Http" />
+    <Using Include="Microsoft.Extensions.DependencyInjection" />
+    <Using Include="Spectre.Console" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Devlead.Console" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Inspect\inspect.html" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="../../icon/LICENSE.md" Pack="true" PackagePath="icon/LICENSE.md" />
+    <None Include="../../icon/devlead.testing.mockhttp.png" Pack="true" PackagePath="icon/devlead.testing.mockhttp.png" />
+    <InternalsVisibleTo Include="Devlead.Testing.MockHttp.Tool.Tests" />
+  </ItemGroup>
+
+</Project>

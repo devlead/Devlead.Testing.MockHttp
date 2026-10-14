@@ -58,7 +58,6 @@ Setup(
                 .WithProperty("Company", "devlead")
                 .WithProperty("PackageLicenseExpression", "MIT")
                 .WithProperty("PackageTags", "testing;http")
-                .WithProperty("PackageDescription", ".NET Library for mocking HTTP client requests")
                 .WithProperty("RepositoryUrl", "https://github.com/devlead/Devlead.Testing.MockHttp.git")
                 .WithProperty("ContinuousIntegrationBuild", GitHubActions.IsRunningOnGitHubActions ? "true" : "false")
                 .WithProperty("EmbedUntrackedSources", "true"),
@@ -127,9 +126,10 @@ Task("Clean")
         )
     )
 .Then("Pack")
-    .Does<BuildData>(
-        static (context, data) => context.DotNetPack(
-            data.ProjectPath.FullPath,
+    .DoesForEach<BuildData, FilePath>(
+        static (data, _) => data.PackableProjectPaths,
+        static (data, project, context) => context.DotNetPack(
+            project.FullPath,
             new DotNetPackSettings {
                 NoBuild = true,
                 NoRestore = true,

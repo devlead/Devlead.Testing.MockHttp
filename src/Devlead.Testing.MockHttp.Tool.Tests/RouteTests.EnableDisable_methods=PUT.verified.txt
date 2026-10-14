@@ -1,0 +1,13 @@
+﻿[
+  {
+    Version: 1.1,
+    Content: {
+      Headers: []
+    },
+    StatusCode: Created,
+    ReasonPhrase: Created,
+    Headers: [],
+    TrailingHeaders: [],
+    IsSuccessStatusCode: true
+  }
+]
