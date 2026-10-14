@@ -8,6 +8,7 @@ internal sealed partial class RouteTable
     public async Task InvokeAsync(HttpContext context)
     {
         var requestHeaders = CaptureHeaders(context.Request.Headers);
+        var (requestContent, requestContentType, requestContentLength) = await ReadRequestBodyAsync(context.Request).ConfigureAwait(false);
         var method = new HttpMethod(context.Request.Method);
         var pathAndQuery = $"{context.Request.Path}{context.Request.QueryString}";
         var host = context.Request.Host.Value ?? string.Empty;
@@ -15,10 +16,11 @@ internal sealed partial class RouteTable
         var enableDisable = false;
         byte[]? content = null;
         string? contentType = null;
+        RouteEntry? entry = null;
 
         try
         {
-            var entry = FindEntry(method, pathAndQuery, context.Request.Host);
+            entry = FindEntry(method, pathAndQuery, context.Request.Host);
             if (entry is null)
             {
                 context.Response.StatusCode = StatusCodes.Status404NotFound;
@@ -104,6 +106,10 @@ internal sealed partial class RouteTable
         finally
         {
             contentType ??= context.Response.ContentType;
+            var status = context.Response.StatusCode;
+            var route = status == StatusCodes.Status404NotFound || entry is null
+                ? GenerateRoute(context.Request, status, contentType)
+                : entry.Source;
             _activity.Add(
                 new ActivityEntry(
                     Guid.NewGuid().ToString("n")[..12],
@@ -111,14 +117,18 @@ internal sealed partial class RouteTable
                     method.Method,
                     pathAndQuery,
                     host,
-                    context.Response.StatusCode,
+                    status,
                     matched,
                     enableDisable,
                     requestHeaders,
+                    requestContentType,
+                    requestContentLength,
+                    BodyPreview(requestContent, requestContentType),
                     CaptureHeaders(context.Response.Headers),
                     contentType,
                     content?.Length ?? 0,
-                    BodyPreview(content, contentType)));
+                    BodyPreview(content, contentType),
+                    route));
         }
     }
 }

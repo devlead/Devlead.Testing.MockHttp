@@ -39,7 +39,7 @@ curl -i -H "Authorization: Bearer AccessToken" http://127.0.0.1:5080/login/secre
 
 Those requests match `Routes.json` entries whose `AbsoluteUri` values are `https://example.com/index.txt` and `https://example.com/login/secret.json`.
 
-While the host is running, the console shows a live table of configured routes and recent requests. Open `http://127.0.0.1:5080/inspect` for the inspect page: route enable/disable, request activity, and DevTools-style request/response headers. `GET /inspect/api` returns the same snapshot as JSON.
+While the host is running, the console shows a live table of configured routes and recent requests. Open `http://127.0.0.1:5080/inspect` for the inspect page: route enable/disable, request activity, and DevTools-style request/response headers and bodies. `GET /inspect/api` returns the same snapshot as JSON.
 
 ## Routes.json and resources
 

@@ -49,14 +49,21 @@ internal sealed partial class RouteTable
             throw new FileNotFoundException("Routes.json was not found in the resources directory.", routesPath);
         }
 
-        var documents = JsonSerializer.Deserialize<RouteDocument[]>(File.ReadAllText(routesPath), JsonOptions)
-            ?? throw new InvalidOperationException("Routes.json did not contain any routes.");
+        using var parsed = JsonDocument.Parse(File.ReadAllText(routesPath));
+        if (parsed.RootElement.ValueKind != JsonValueKind.Array)
+        {
+            throw new InvalidOperationException("Routes.json did not contain any routes.");
+        }
 
         var entries = new List<RouteEntry>();
         var byAbsoluteUri = new ConcurrentDictionary<(HttpMethod Method, string AbsoluteUri), RouteEntry>();
 
-        foreach (var document in documents)
+        foreach (var element in parsed.RootElement.EnumerateArray())
         {
+            var document = element.Deserialize<RouteDocument>(JsonOptions)
+                ?? throw new InvalidOperationException("Routes.json did not contain any routes.");
+            var source = element.Clone();
+
             foreach (var response in document.Responses)
             {
                 if (!string.IsNullOrWhiteSpace(response.ContentResource))
@@ -71,7 +78,7 @@ internal sealed partial class RouteTable
             foreach (var method in document.Request.Methods)
             {
                 var httpMethod = new HttpMethod(method.Method);
-                var entry = new RouteEntry(httpMethod, document);
+                var entry = new RouteEntry(httpMethod, document, source);
                 entries.Add(entry);
                 byAbsoluteUri.TryAdd((httpMethod, document.Request.AbsoluteUri), entry);
             }

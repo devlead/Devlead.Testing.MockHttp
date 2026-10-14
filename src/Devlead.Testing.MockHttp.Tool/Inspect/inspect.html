@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <title>MockHttp inspect</title>
+  <link rel="icon" type="image/png" href="/favicon.ico" />
   <style>
     :root { color-scheme: dark; --bg: #111418; --panel: #1b2028; --line: #2c3440; --text: #e8edf4; --muted: #93a0b0; --accent: #6cb6ff; --ok: #6ee7b7; --bad: #fca5a5; }
     html, body { height: 100%; }
@@ -10,14 +11,17 @@
     header, footer { padding: 16px 20px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; flex: 0 0 auto; background: var(--bg); }
     header { border-bottom: 1px solid var(--line); }
     footer { border-top: 1px solid var(--line); }
-    #appVersion { margin-left: auto; }
+    #appVersion { margin-left: auto; color: var(--muted); text-decoration: none; }
+    #appVersion:hover { color: var(--accent); }
     h1 { font-size: 16px; margin: 0; }
     footer code { font: 13px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--accent); }
     main { display: flex; flex-direction: column; gap: 24px; padding: 16px 20px 32px; overflow: auto; flex: 1 1 auto; min-height: 0; }
     section { box-sizing: border-box; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px; min-width: 0; }
     .list-panel { display: flex; flex-direction: column; height: 42vh; max-height: 42vh; overflow: hidden; }
     .split-panel { display: grid; grid-template-columns: 2fr 1fr; gap: 0; }
+    .activity-split { grid-template-columns: 1fr 2fr; }
     .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+    .exchange-col .panel-head { margin-top: 8px; }
     h2 { margin: 0; font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
     .table-scroll { flex: 1 1 auto; min-height: 0; overflow: auto; }
     table { width: 100%; border-collapse: collapse; }
@@ -34,15 +38,24 @@
     .meta div { display: grid; gap: 2px; }
     .meta dt { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
     .meta dd { margin: 0; word-break: break-all; }
-    pre { margin: 0; padding: 10px; overflow: auto; background: #0c0f13; border-radius: 6px; max-height: 180px; }
+    pre { margin: 0; padding: 10px; overflow: auto; background: #0c0f13; border-radius: 6px; max-height: 240px; white-space: pre-wrap; word-break: break-word; }
+    .exchange { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; min-width: 0; }
+    .exchange-col { min-width: 0; overflow: auto; }
+    .exchange-col + .exchange-col { padding-left: 16px; border-left: 1px solid var(--line); }
     .headers td:first-child { color: #9cdcfe; white-space: nowrap; }
+    pre.json .key { color: #9cdcfe; }
+    pre.json .str { color: #ce9178; }
+    pre.json .num { color: #b5cea8; }
+    pre.json .bool, pre.json .null { color: #569cd6; }
+    pre.xml .tag { color: #569cd6; }
+    pre.xml .attr { color: #9cdcfe; }
+    pre.xml .val { color: #ce9178; }
   </style>
 </head>
 <body>
   <header>
     <h1>MockHttp inspect</h1>
     <span id="meta" class="muted"></span>
-    <span id="appVersion" class="muted"></span>
   </header>
   <main>
     <section class="list-panel split-panel">
@@ -63,7 +76,7 @@
       <div id="routeDetail" class="detail">
         <div class="panel-head">
           <h2>Route</h2>
-          <button type="button" id="toggleRoute">Toggle</button>
+          <button type="button" id="toggleRoute">Enable</button>
         </div>
         <dl class="meta">
           <div><dt>Method</dt><dd id="routeMethod">Select a route.</dd></div>
@@ -73,7 +86,7 @@
         </dl>
       </div>
     </section>
-    <section class="list-panel split-panel">
+    <section class="list-panel split-panel activity-split">
       <div class="list">
         <div class="panel-head">
           <h2>Activity</h2>
@@ -90,17 +103,30 @@
         </div>
       </div>
       <div id="activityDetail" class="detail">
-        <div class="panel-head"><h2>Headers</h2></div>
+        <div class="panel-head"><h2>Exchange</h2></div>
         <dl class="meta">
           <div><dt>General</dt><dd id="actGeneral">Select a request.</dd></div>
           <div><dt>Matched</dt><dd id="actMatched"></dd></div>
         </dl>
-        <h2>Request headers</h2>
-        <table class="headers" id="reqHeaders"><tbody></tbody></table>
-        <h2>Response headers</h2>
-        <table class="headers" id="resHeaders"><tbody></tbody></table>
-        <h2>Body preview</h2>
-        <pre id="bodyPreview"></pre>
+        <div class="exchange">
+          <div class="exchange-col">
+            <h2>Request headers</h2>
+            <table class="headers" id="reqHeaders"><tbody></tbody></table>
+            <h2>Body preview</h2>
+            <pre id="reqBody"></pre>
+            <div class="panel-head">
+              <h2>Route</h2>
+              <button type="button" id="copyRoute">Copy</button>
+            </div>
+            <pre id="reqRoute"></pre>
+          </div>
+          <div class="exchange-col">
+            <h2>Response headers</h2>
+            <table class="headers" id="resHeaders"><tbody></tbody></table>
+            <h2>Body preview</h2>
+            <pre id="resBody"></pre>
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -110,6 +136,7 @@
     <button type="button" id="copyListen">Copy</button>
     <span class="muted">Inspect</span>
     <code id="inspectUrl"></code>
+    <a id="appVersion" href="https://www.nuget.org/packages/Devlead.Testing.MockHttp.Tool" target="_blank" rel="noopener noreferrer"></a>
   </footer>
   <script>
     let state = null;
@@ -142,6 +169,93 @@
         .join("");
     }
 
+    function isJsonType(contentType, text) {
+      return /json/i.test(contentType ?? "") || /^\s*[\[{]/.test(text ?? "");
+    }
+
+    function isXmlType(contentType, text) {
+      return /xml/i.test(contentType ?? "") || /^\s*</.test(text ?? "");
+    }
+
+    function isFormType(contentType) {
+      return /urlencoded/i.test(contentType ?? "");
+    }
+
+    function highlightForm(source) {
+      try {
+        const params = new URLSearchParams(source);
+        const lines = [];
+        for (const [name, value] of params.entries()) {
+          lines.push(`<span class="key">${esc(name)}</span>=<span class="str">${esc(value)}</span>`);
+        }
+        if (lines.length) return lines.join("\n");
+      } catch { /* invalid form text */ }
+      return "";
+    }
+
+    function highlightJson(source) {
+      return source.replace(
+        /("(?:\\u[a-fA-F0-9]{4}|\\[^u]|[^\\"])*"(?:\s*:)?|\b(?:true|false|null)\b|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)/g,
+        (match) => {
+          let cls = "num";
+          if (match[0] === "\"") cls = /:$/.test(match) ? "key" : "str";
+          else if (match === "true" || match === "false") cls = "bool";
+          else if (match === "null") cls = "null";
+          return `<span class="${cls}">${esc(match)}</span>`;
+        }
+      );
+    }
+
+    function highlightXml(source) {
+      return esc(source).replace(
+        /(&lt;\/?[\w:.-]+)((?:\s+[\w:.-]+(?:\s*=\s*(?:&quot;.*?&quot;|'.*?'))?)*)(\s*\/?&gt;)/g,
+        (_, tag, attrs, end) => {
+          const highlightedAttrs = attrs.replace(
+            /([\w:.-]+)(\s*=\s*)(&quot;.*?&quot;|'.*?')/g,
+            `<span class="attr">$1</span>$2<span class="val">$3</span>`
+          );
+          return `<span class="tag">${tag}</span>${highlightedAttrs}<span class="tag">${end}</span>`;
+        }
+      );
+    }
+
+    function fallbackBody(preview, contentType, contentLength) {
+      if (preview) return preview;
+      if (contentLength) return `${contentType ?? "binary"} (${contentLength} bytes)`;
+      return "";
+    }
+
+    function renderBody(el, preview, contentType, contentLength) {
+      const text = fallbackBody(preview, contentType, contentLength);
+      el.className = "";
+      if (preview && isJsonType(contentType, preview)) {
+        try {
+          el.className = "json";
+          el.innerHTML = highlightJson(JSON.stringify(JSON.parse(preview), null, 2));
+          return;
+        } catch { /* truncated or invalid JSON */ }
+        if (/json/i.test(contentType ?? "")) {
+          el.className = "json";
+          el.innerHTML = highlightJson(preview);
+          return;
+        }
+      }
+      if (preview && isXmlType(contentType, preview) && /xml|html/i.test(contentType ?? "")) {
+        el.className = "xml";
+        el.innerHTML = highlightXml(preview);
+        return;
+      }
+      if (preview && isFormType(contentType)) {
+        const highlighted = highlightForm(preview);
+        if (highlighted) {
+          el.className = "json";
+          el.innerHTML = highlighted;
+          return;
+        }
+      }
+      el.textContent = text;
+    }
+
     function renderRoutes() {
       const sort = sorts.routes;
       const rows = [...(state?.routes ?? [])].sort((a, b) => compare(a, b, sort.key, sort.dir));
@@ -165,12 +279,14 @@
         $("routeUri").textContent = "";
         $("routeEnabled").textContent = "";
         $("routeHits").textContent = "";
+        $("toggleRoute").textContent = "Enable";
         return;
       }
       $("routeMethod").textContent = route.method;
       $("routeUri").textContent = route.absoluteUri;
       $("routeEnabled").textContent = route.enabled ? "yes" : "no";
       $("routeHits").textContent = String(route.hits);
+      $("toggleRoute").textContent = route.enabled ? "Disable" : "Enable";
     }
 
     function renderActivity() {
@@ -196,18 +312,25 @@
         $("actMatched").textContent = "";
         $("reqHeaders").tBodies[0].innerHTML = "";
         $("resHeaders").tBodies[0].innerHTML = "";
-        $("bodyPreview").textContent = "";
+        $("reqBody").textContent = "";
+        $("resBody").textContent = "";
+        $("reqRoute").textContent = "";
+        $("reqBody").className = "";
+        $("resBody").className = "";
+        $("reqRoute").className = "";
         return;
       }
       $("actGeneral").textContent = `${item.method} ${item.pathAndQuery} → ${item.status}`;
       $("actMatched").textContent = item.matchedAbsoluteUri;
       $("reqHeaders").tBodies[0].innerHTML = headerRows(item.requestHeaders);
       $("resHeaders").tBodies[0].innerHTML = headerRows(item.responseHeaders);
-      $("bodyPreview").textContent = item.bodyPreview
-        ? item.bodyPreview
-        : item.contentLength
-          ? `${item.contentType ?? "binary"} (${item.contentLength} bytes)`
-          : "";
+      renderBody($("reqBody"), item.requestBodyPreview, item.requestContentType, item.requestContentLength);
+      renderBody($("resBody"), item.bodyPreview, item.contentType, item.contentLength);
+      renderBody(
+        $("reqRoute"),
+        item.route ? JSON.stringify(item.route) : "",
+        "application/json",
+        item.route ? 1 : 0);
     }
 
     function renderMeta() {
@@ -268,6 +391,11 @@
     };
     $("copyListen").onclick = async () => {
       if (state?.listenUrl) await navigator.clipboard.writeText(state.listenUrl);
+    };
+    $("copyRoute").onclick = async () => {
+      const item = state?.activity?.find((entry) => entry.id === selectedActivity);
+      if (!item?.route) return;
+      await navigator.clipboard.writeText(JSON.stringify(item.route, null, 2));
     };
 
     refresh();

@@ -26,6 +26,7 @@ internal static partial class MockHttpWebHost
     /// <param name="app">The web application.</param>
     public static void Map(WebApplication app)
     {
+        app.MapGet("/favicon.ico", Favicon);
         app.MapGet("/inspect", InspectPage);
         app.MapGet("/inspect/api", InspectState);
         app.MapPost("/inspect/api/routes/toggle", InspectToggle);
@@ -33,7 +34,8 @@ internal static partial class MockHttpWebHost
 
         var table = app.Services.GetRequiredService<RouteTable>();
         app.UseWhen(
-            context => !context.Request.Path.StartsWithSegments("/inspect"),
+            context => !context.Request.Path.StartsWithSegments("/inspect")
+                       && !context.Request.Path.Equals("/favicon.ico", StringComparison.OrdinalIgnoreCase),
             branch => branch.Run(table.InvokeAsync));
     }
 }
