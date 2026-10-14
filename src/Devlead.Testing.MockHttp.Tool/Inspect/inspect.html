@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>MockHttp inspect</title>
+  <style>
+    :root { color-scheme: dark; --bg: #111418; --panel: #1b2028; --line: #2c3440; --text: #e8edf4; --muted: #93a0b0; --accent: #6cb6ff; --ok: #6ee7b7; --bad: #fca5a5; }
+    html, body { height: 100%; }
+    body { margin: 0; display: flex; flex-direction: column; overflow: hidden; font: 14px/1.45 ui-sans-serif, system-ui, sans-serif; background: var(--bg); color: var(--text); }
+    header, footer { padding: 16px 20px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; flex: 0 0 auto; background: var(--bg); }
+    header { border-bottom: 1px solid var(--line); }
+    footer { border-top: 1px solid var(--line); }
+    #appVersion { margin-left: auto; }
+    h1 { font-size: 16px; margin: 0; }
+    footer code { font: 13px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--accent); }
+    main { display: flex; flex-direction: column; gap: 24px; padding: 16px 20px 32px; overflow: auto; flex: 1 1 auto; min-height: 0; }
+    section { box-sizing: border-box; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px; min-width: 0; }
+    .list-panel { display: flex; flex-direction: column; height: 42vh; max-height: 42vh; overflow: hidden; }
+    .split-panel { display: grid; grid-template-columns: 2fr 1fr; gap: 0; }
+    .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+    h2 { margin: 0; font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+    .table-scroll { flex: 1 1 auto; min-height: 0; overflow: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 6px 4px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    .table-scroll thead th { position: sticky; top: 0; background: var(--panel); }
+    tr.selected td { background: #243044; }
+    th[data-sort] { cursor: pointer; user-select: none; }
+    button { font: inherit; color: var(--text); background: #0f1318; border: 1px solid var(--line); border-radius: 4px; padding: 4px 8px; cursor: pointer; }
+    button.primary { background: #1d4f7a; border-color: var(--accent); }
+    .ok { color: var(--ok); } .bad { color: var(--bad); } .muted { color: var(--muted); }
+    .detail { min-width: 0; overflow: auto; padding-left: 12px; border-left: 1px solid var(--line); }
+    .list { display: flex; flex-direction: column; min-width: 0; overflow: hidden; padding-right: 12px; }
+    .meta { margin: 0 0 12px; display: grid; gap: 8px; }
+    .meta div { display: grid; gap: 2px; }
+    .meta dt { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
+    .meta dd { margin: 0; word-break: break-all; }
+    pre { margin: 0; padding: 10px; overflow: auto; background: #0c0f13; border-radius: 6px; max-height: 180px; }
+    .headers td:first-child { color: #9cdcfe; white-space: nowrap; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>MockHttp inspect</h1>
+    <span id="meta" class="muted"></span>
+    <span id="appVersion" class="muted"></span>
+  </header>
+  <main>
+    <section class="list-panel split-panel">
+      <div class="list">
+        <div class="panel-head">
+          <h2>Routes</h2>
+        </div>
+        <div class="table-scroll">
+          <table id="routes"><thead><tr>
+            <th data-sort="method">Method</th>
+            <th data-sort="pathAndQuery">Path</th>
+            <th data-sort="host">Host</th>
+            <th data-sort="enabled">Enabled</th>
+            <th data-sort="hits">Hits</th>
+          </tr></thead><tbody></tbody></table>
+        </div>
+      </div>
+      <div id="routeDetail" class="detail">
+        <div class="panel-head">
+          <h2>Route</h2>
+          <button type="button" id="toggleRoute">Toggle</button>
+        </div>
+        <dl class="meta">
+          <div><dt>Method</dt><dd id="routeMethod">Select a route.</dd></div>
+          <div><dt>Absolute URI</dt><dd id="routeUri"></dd></div>
+          <div><dt>Enabled</dt><dd id="routeEnabled"></dd></div>
+          <div><dt>Hits</dt><dd id="routeHits"></dd></div>
+        </dl>
+      </div>
+    </section>
+    <section class="list-panel split-panel">
+      <div class="list">
+        <div class="panel-head">
+          <h2>Activity</h2>
+          <button type="button" id="clearActivity">Clear</button>
+        </div>
+        <div class="table-scroll">
+          <table id="activity"><thead><tr>
+            <th data-sort="utc">UTC</th>
+            <th data-sort="method">Method</th>
+            <th data-sort="pathAndQuery">Path</th>
+            <th data-sort="status">Status</th>
+            <th data-sort="matchedAbsoluteUri">Matched</th>
+          </tr></thead><tbody></tbody></table>
+        </div>
+      </div>
+      <div id="activityDetail" class="detail">
+        <div class="panel-head"><h2>Headers</h2></div>
+        <dl class="meta">
+          <div><dt>General</dt><dd id="actGeneral">Select a request.</dd></div>
+          <div><dt>Matched</dt><dd id="actMatched"></dd></div>
+        </dl>
+        <h2>Request headers</h2>
+        <table class="headers" id="reqHeaders"><tbody></tbody></table>
+        <h2>Response headers</h2>
+        <table class="headers" id="resHeaders"><tbody></tbody></table>
+        <h2>Body preview</h2>
+        <pre id="bodyPreview"></pre>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <span class="muted">Listen</span>
+    <code id="listenUrl"></code>
+    <button type="button" id="copyListen">Copy</button>
+    <span class="muted">Inspect</span>
+    <code id="inspectUrl"></code>
+  </footer>
+  <script>
+    let state = null;
+    let selectedRoute = null;
+    let selectedActivity = null;
+    const sorts = {
+      routes: { key: "pathAndQuery", dir: 1 },
+      activity: { key: "utc", dir: -1 },
+    };
+    const $ = (id) => document.getElementById(id);
+
+    function esc(value) {
+      return String(value ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c]));
+    }
+
+    function routeKey(route) {
+      return `${route.method} ${route.absoluteUri}`;
+    }
+
+    function compare(left, right, key, dir) {
+      const a = left[key], b = right[key];
+      if (typeof a === "number" && typeof b === "number") return (a - b) * dir;
+      if (typeof a === "boolean" && typeof b === "boolean") return ((a === b) ? 0 : a ? 1 : -1) * dir;
+      return String(a ?? "").localeCompare(String(b ?? ""), undefined, { sensitivity: "base" }) * dir;
+    }
+
+    function headerRows(headers) {
+      return Object.entries(headers ?? {})
+        .map(([name, values]) => `<tr><td>${esc(name)}</td><td>${esc((values ?? []).join(", "))}</td></tr>`)
+        .join("");
+    }
+
+    function renderRoutes() {
+      const sort = sorts.routes;
+      const rows = [...(state?.routes ?? [])].sort((a, b) => compare(a, b, sort.key, sort.dir));
+      $("routes").tBodies[0].innerHTML = rows.map((route) => {
+        const selected = selectedRoute && routeKey(route) === selectedRoute ? " selected" : "";
+        return `<tr class="${selected}" data-key="${esc(routeKey(route))}">
+          <td>${esc(route.method)}</td>
+          <td>${esc(route.pathAndQuery)}</td>
+          <td>${esc(route.host)}</td>
+          <td class="${route.enabled ? "ok" : "bad"}">${route.enabled ? "yes" : "no"}</td>
+          <td>${esc(route.hits)}</td>
+        </tr>`;
+      }).join("");
+      renderRoute();
+    }
+
+    function renderRoute() {
+      const route = state?.routes?.find((item) => routeKey(item) === selectedRoute);
+      if (!route) {
+        $("routeMethod").textContent = "Select a route.";
+        $("routeUri").textContent = "";
+        $("routeEnabled").textContent = "";
+        $("routeHits").textContent = "";
+        return;
+      }
+      $("routeMethod").textContent = route.method;
+      $("routeUri").textContent = route.absoluteUri;
+      $("routeEnabled").textContent = route.enabled ? "yes" : "no";
+      $("routeHits").textContent = String(route.hits);
+    }
+
+    function renderActivity() {
+      const sort = sorts.activity;
+      const rows = [...(state?.activity ?? [])].sort((a, b) => compare(a, b, sort.key, sort.dir));
+      $("activity").tBodies[0].innerHTML = rows.map((item) => {
+        const selected = selectedActivity === item.id ? " selected" : "";
+        return `<tr class="${selected}" data-id="${esc(item.id)}">
+          <td>${esc(item.utc)}</td>
+          <td>${esc(item.method)}</td>
+          <td>${esc(item.pathAndQuery)}</td>
+          <td>${esc(item.status)}</td>
+          <td>${esc(item.matchedAbsoluteUri)}</td>
+        </tr>`;
+      }).join("");
+      renderActivityDetail();
+    }
+
+    function renderActivityDetail() {
+      const item = state?.activity?.find((entry) => entry.id === selectedActivity);
+      if (!item) {
+        $("actGeneral").textContent = "Select a request.";
+        $("actMatched").textContent = "";
+        $("reqHeaders").tBodies[0].innerHTML = "";
+        $("resHeaders").tBodies[0].innerHTML = "";
+        $("bodyPreview").textContent = "";
+        return;
+      }
+      $("actGeneral").textContent = `${item.method} ${item.pathAndQuery} → ${item.status}`;
+      $("actMatched").textContent = item.matchedAbsoluteUri;
+      $("reqHeaders").tBodies[0].innerHTML = headerRows(item.requestHeaders);
+      $("resHeaders").tBodies[0].innerHTML = headerRows(item.responseHeaders);
+      $("bodyPreview").textContent = item.bodyPreview
+        ? item.bodyPreview
+        : item.contentLength
+          ? `${item.contentType ?? "binary"} (${item.contentLength} bytes)`
+          : "";
+    }
+
+    function renderMeta() {
+      const counts = state?.counts;
+      $("meta").textContent = counts
+        ? `${counts.routes} routes, ${counts.enabled} enabled, ${counts.requests} requests, ${counts.unauthorized} 401, ${counts.notFound} 404`
+        : "";
+      $("appVersion").textContent = state?.version ?? "";
+      $("listenUrl").textContent = state?.listenUrl ?? "";
+      $("inspectUrl").textContent = state?.inspectUrl ?? "";
+    }
+
+    async function refresh() {
+      const response = await fetch("/inspect/api");
+      state = await response.json();
+      renderMeta();
+      renderRoutes();
+      renderActivity();
+    }
+
+    $("routes").addEventListener("click", (event) => {
+      const row = event.target.closest("tr[data-key]");
+      if (!row) return;
+      selectedRoute = row.getAttribute("data-key");
+      renderRoutes();
+    });
+    $("activity").addEventListener("click", (event) => {
+      const row = event.target.closest("tr[data-id]");
+      if (!row) return;
+      selectedActivity = row.getAttribute("data-id");
+      renderActivity();
+    });
+    ["routes", "activity"].forEach((id) => {
+      $(id).tHead.addEventListener("click", (event) => {
+        const header = event.target.closest("th[data-sort]");
+        if (!header) return;
+        const current = sorts[id];
+        current.dir = current.key === header.dataset.sort ? -current.dir : 1;
+        current.key = header.dataset.sort;
+        if (id === "routes") renderRoutes();
+        else renderActivity();
+      });
+    });
+    $("toggleRoute").onclick = async () => {
+      const route = state?.routes?.find((item) => routeKey(item) === selectedRoute);
+      if (!route) return;
+      await fetch("/inspect/api/routes/toggle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ method: route.method, absoluteUri: route.absoluteUri, enabled: !route.enabled })
+      });
+      await refresh();
+    };
+    $("clearActivity").onclick = async () => {
+      await fetch("/inspect/api/activity", { method: "DELETE" });
+      selectedActivity = null;
+      await refresh();
+    };
+    $("copyListen").onclick = async () => {
+      if (state?.listenUrl) await navigator.clipboard.writeText(state.listenUrl);
+    };
+
+    refresh();
+    setInterval(refresh, 1000);
+  </script>
+</body>
+</html>

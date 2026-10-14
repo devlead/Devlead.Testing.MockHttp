@@ -1,3 +1,7 @@
 
 # Verify
 *.verified.txt text eol=lf working-tree-encoding=UTF-8
+
+# Mock HTTP bodies (Content-MD5 is computed from file bytes)
+src/Devlead.Testing.MockHttp.Tests/Resources/** text eol=lf
+src/Devlead.Testing.MockHttp.Tool.Tests/Fixtures/** text eol=lf

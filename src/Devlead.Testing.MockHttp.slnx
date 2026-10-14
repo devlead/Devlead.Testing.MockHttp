@@ -1,4 +1,6 @@
 <Solution>
   <Project Path="Devlead.Testing.MockHttp.Tests/Devlead.Testing.MockHttp.Tests.csproj" />
+  <Project Path="Devlead.Testing.MockHttp.Tool.Tests/Devlead.Testing.MockHttp.Tool.Tests.csproj" />
+  <Project Path="Devlead.Testing.MockHttp.Tool/Devlead.Testing.MockHttp.Tool.csproj" />
   <Project Path="Devlead.Testing.MockHttp/Devlead.Testing.MockHttp.csproj" />
 </Solution>

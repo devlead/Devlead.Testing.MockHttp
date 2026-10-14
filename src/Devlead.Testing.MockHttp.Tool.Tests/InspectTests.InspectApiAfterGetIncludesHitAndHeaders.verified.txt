@@ -1,0 +1,87 @@
+﻿{
+  version: {Scrubbed},
+  listenUrl: http://localhost,
+  inspectUrl: http://localhost/inspect,
+  resourcesDirectory: {Scrubbed},
+  matchHost: false,
+  counts: {
+    routes: 5,
+    enabled: 3,
+    requests: 1,
+    unauthorized: 0,
+    notFound: 0
+  },
+  routes: [
+    {
+      method: GET,
+      absoluteUri: https://example.com/login/secret.json,
+      host: example.com,
+      pathAndQuery: /login/secret.json,
+      enabled: true,
+      hits: 0
+    },
+    {
+      method: GET,
+      absoluteUri: https://example.com/index.txt,
+      host: example.com,
+      pathAndQuery: /index.txt,
+      enabled: true,
+      hits: 1
+    },
+    {
+      method: PUT,
+      absoluteUri: https://example.com/new.txt,
+      host: example.com,
+      pathAndQuery: /new.txt,
+      enabled: true,
+      hits: 0
+    },
+    {
+      method: GET,
+      absoluteUri: https://example.com/new.txt,
+      host: example.com,
+      pathAndQuery: /new.txt,
+      enabled: false,
+      hits: 0
+    },
+    {
+      method: DELETE,
+      absoluteUri: https://example.com/new.txt,
+      host: example.com,
+      pathAndQuery: /new.txt,
+      enabled: false,
+      hits: 0
+    }
+  ],
+  activity: [
+    {
+      id: {Scrubbed},
+      utc: {Scrubbed},
+      method: GET,
+      pathAndQuery: /index.txt,
+      host: localhost,
+      status: 200,
+      matchedAbsoluteUri: https://example.com/index.txt,
+      enableDisable: false,
+      requestHeaders: {
+        X-Test: [
+          inspect
+        ],
+        Host: [
+          localhost
+        ]
+      },
+      responseHeaders: {
+        Content-Type: [
+          text/plain
+        ],
+        Content-MD5: [
+          ZajifYh5KDgxtmS9i38K1A==
+        ]
+      },
+      contentType: text/plain,
+      contentLength: 13,
+      bodyPreview: Hello, World!
+    }
+  ]
+}

@@ -17,6 +17,10 @@ public record BuildData(
 {
     private const string    IntegrationTest = "integrationtest",
                             Output = "output";
+    public FilePath ToolProjectPath => ProjectRoot.CombineWithFilePath("Devlead.Testing.MockHttp.Tool/Devlead.Testing.MockHttp.Tool.csproj");
+
+    public FilePath[] PackableProjectPaths => [ProjectPath, ToolProjectPath];
+
     public DirectoryPath NuGetOutputPath { get; } = OutputPath.Combine("nuget");
     public DirectoryPath BinaryOutputPath { get; } = OutputPath.Combine("bin");
     public DirectoryPath IntegrationTestPath { get; } = OutputPath.Combine(IntegrationTest);

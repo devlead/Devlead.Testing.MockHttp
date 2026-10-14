@@ -1,0 +1,24 @@
+[
+  {
+    "Request": {
+      "Methods": [
+        {
+          "Method": "GET"
+        }
+      ],
+      "AbsoluteUri": "https://example.com/headers.txt"
+    },
+    "Responses": [
+      {
+        "RequestHeaders": {
+          "X-Test": [
+            "yes"
+          ]
+        },
+        "ContentResource": "Example.Index.txt",
+        "ContentType": "text/plain",
+        "StatusCode": 200
+      }
+    ]
+  }
+]
