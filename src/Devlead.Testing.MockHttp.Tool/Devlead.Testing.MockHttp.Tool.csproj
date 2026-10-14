@@ -37,6 +37,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Inspect\inspect.html" />
+    <EmbeddedResource Include="../../icon/devlead.testing.mockhttp.png" LogicalName="Devlead.Testing.MockHttp.Tool.Inspect.favicon.png" />
     <None Include="README.md" Pack="true" PackagePath="\" />
     <None Include="../../icon/LICENSE.md" Pack="true" PackagePath="icon/LICENSE.md" />
     <None Include="../../icon/devlead.testing.mockhttp.png" Pack="true" PackagePath="icon/devlead.testing.mockhttp.png" />
