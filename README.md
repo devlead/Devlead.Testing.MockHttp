@@ -1,5 +1,7 @@
 # Devlead.Testing.MockHttp
 
+[![NuGet](https://img.shields.io/nuget/v/Devlead.Testing.MockHttp.svg)](https://www.nuget.org/packages/Devlead.Testing.MockHttp)
+
 Opinionated .NET source package for mocking HTTP client requests
 
 ## Installation
