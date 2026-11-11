@@ -60,11 +60,7 @@ public class Routes<T>
 
 
     private static readonly
-#if NET9_0_OR_GREATER
-        Lock 
-#else
-        object
-#endif
+        Lock
         _lock = new ();
 
     private static ImmutableDictionary<(HttpMethod Method, string PathAndQuery), Func<HttpRequestMessage, HttpResponseMessage>> InitializeRoutesFromResource()
