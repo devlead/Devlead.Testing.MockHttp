@@ -61,10 +61,14 @@ public record BuildData(
 
     public string? AzureStorageAccountContainer { get; } = System.Environment.GetEnvironmentVariable("AZURE_STORAGE_ACCOUNT_CONTAINER");
 
+    public bool ShouldPrepareAzureWorkloadIdentity() => GitHubActions.IsRunningOnGitHubActions &&
+                                                        AzureCredentials.WorkloadIdentitySpecified;
+
     public bool ShouldRunIntegrationTests() =>  !string.IsNullOrWhiteSpace(AzureStorageAccount) &&
                                                 !string.IsNullOrWhiteSpace(AzureStorageAccountContainer) &&
                                                 (
                                                     AzureCredentials.AzureCredentialsSpecified ||
+                                                    ShouldPrepareAzureWorkloadIdentity() ||
                                                     IsLocalBuild
                                                 );
 }
@@ -80,6 +84,10 @@ public record AzureCredentials(
                                                      !string.IsNullOrWhiteSpace(ClientId) &&
                                                      !string.IsNullOrWhiteSpace(ClientSecret) &&
                                                      !string.IsNullOrWhiteSpace(AuthorityHost);
+
+    public bool WorkloadIdentitySpecified { get; } = !string.IsNullOrWhiteSpace(TenantId) &&
+                                                     !string.IsNullOrWhiteSpace(ClientId) &&
+                                                     string.IsNullOrWhiteSpace(ClientSecret);
 }
 internal record ExtensionHelper(Func<string, CakeTaskBuilder> TaskCreate, Func<CakeReport> Run);
 
